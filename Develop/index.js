@@ -1,10 +1,10 @@
 // TODO: Include packages needed for this application
 const inquirer = require('inquirer');
 const fs = require('fs');
-// const readmeContent = require('./generateMarkdown.js');
+const generateMarkdown = require('./utils/generateMarkdown.js');
 
 // TODO: Create an array of questions for user input
-inquirer.prompt([
+const questions = [
     {
         type: 'input',
         name: 'title',
@@ -14,12 +14,11 @@ inquirer.prompt([
     {
         type: 'input',
         name: 'description',
-        message: 'Enter a description of the project:'
+        message: 'Enter a description of the project:',
     },
     {   type: 'input',
         name: 'install',
         message: 'Add installation instructions:',
-
     },
     {
         type: 'input',
@@ -52,50 +51,24 @@ inquirer.prompt([
         name: 'email',
         message: 'Enter your email address:',
     },
-]).then(({
-    title,
-    description,
-    install,
-    useinfo,
-    contribution,
-    test,
-    license,
-    git,
-    email,
-})=>{
-const template = `# ${title}
+];
 
-* [Installation](#install)
-* [Usage](#useinfo)
-* [Contribution](#contribution)
-* [Test](#test)
-* [License](#license)
-# Installation
-${install}
-## Usage
-${useinfo}
-## Contribution
-${contribution}
-## Test Info
-${test}
-## License
-${license}
-
-# Contact
-* GitHub :${git}
-* Email :${email}`;
-
-writeToFile(title, template);
-}
-);
 
 // TODO: Create a function to write README file
 function writeToFile(fileName, data) {
-    fs.writeFileSync(`./${fileName.toLowerCase().split(' ').join('')}.md`, data)
+    fs.writeFileSync(fileName, data)
 };
 
 // TODO: Create a function to initialize app
-function init() {}
+function init() {
+    inquirer.prompt(questions)
+    .then(function (userInput) {
+        console.log(userInput)
+        writeToFile("README.md" , generateMarkdown(userInput)); 
+        console.log("Your README file is complete!");   
+    });
+    
+};
 
 // Function call to initialize app
 init();
